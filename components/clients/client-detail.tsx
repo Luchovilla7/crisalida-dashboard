@@ -75,7 +75,7 @@ export function ClientDetail({
         <div className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-4">
           <div>
             <p className="text-xs text-inkmuted">Valor del contrato</p>
-            <p className="text-sm font-medium text-ink">{formatMoney(client.contract_value)}</p>
+            <p className="text-sm font-medium text-ink">{formatMoney(client.contract_value, client.currency)}</p>
           </div>
           <div>
             <p className="text-xs text-inkmuted">Inicio</p>

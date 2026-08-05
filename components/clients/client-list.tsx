@@ -88,7 +88,7 @@ export function ClientList({ clients, services }: { clients: Client[]; services?
                 )}
 
                 <div className="flex items-center justify-between text-xs text-inkmuted">
-                  <span>{formatMoney(client.contract_value)}</span>
+                  <span>{formatMoney(client.contract_value, client.currency)}</span>
                   <span>{formatDate(client.start_date)}</span>
                 </div>
 

@@ -5,6 +5,7 @@ export type Client = {
   service_ids: string[];
   status: string;
   contract_value: number;
+  currency: string;
   start_date: string | null;
   assigned_to: string | null;
   notes: string | null;
@@ -76,6 +77,7 @@ export type Payment = {
   client_id: string | null;
   service_id: string | null;
   amount: number;
+  currency: string;
   month: string;
   status: "pendiente" | "cobrado";
   is_retainer: boolean;

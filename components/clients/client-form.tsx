@@ -27,6 +27,7 @@ export function ClientForm({
     service_ids: client?.service_ids ?? [],
     status: client?.status ?? agency.clientStatuses[0].id,
     contract_value: client?.contract_value ?? 0,
+    currency: client?.currency ?? agency.currency,
     start_date: client?.start_date ?? "",
     assigned_to: client?.assigned_to ?? "",
     notes: client?.notes ?? "",
@@ -106,8 +107,8 @@ export function ClientForm({
           </div>
         </Field>
 
-        <div className="grid grid-cols-2 gap-3">
-          <Field label={`Valor del contrato (${agency.currency})`}>
+        <div className="grid grid-cols-3 gap-3">
+          <Field label="Valor del contrato" className="col-span-2">
             <Input
               type="number"
               min={0}
@@ -115,14 +116,24 @@ export function ClientForm({
               onChange={(e) => setForm({ ...form, contract_value: Number(e.target.value) })}
             />
           </Field>
-          <Field label="Fecha de inicio">
-            <Input
-              type="date"
-              value={form.start_date ?? ""}
-              onChange={(e) => setForm({ ...form, start_date: e.target.value })}
-            />
+          <Field label="Moneda">
+            <Select value={form.currency} onChange={(e) => setForm({ ...form, currency: e.target.value })}>
+              {agency.currencies.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.id}
+                </option>
+              ))}
+            </Select>
           </Field>
         </div>
+
+        <Field label="Fecha de inicio">
+          <Input
+            type="date"
+            value={form.start_date ?? ""}
+            onChange={(e) => setForm({ ...form, start_date: e.target.value })}
+          />
+        </Field>
 
         <Field label="Notas">
           <Textarea rows={3} value={form.notes ?? ""} onChange={(e) => setForm({ ...form, notes: e.target.value })} />

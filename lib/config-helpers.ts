@@ -25,3 +25,7 @@ export function getPipelineStage(id: string) {
 export function getTaskStage(id: string) {
   return agency.taskStages.find((s) => s.id === id) ?? agency.taskStages[0];
 }
+
+export function getCurrency(id: string | null | undefined) {
+  return agency.currencies.find((c) => c.id === id) ?? agency.currencies[0];
+}

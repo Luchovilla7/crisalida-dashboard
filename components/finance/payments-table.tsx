@@ -53,7 +53,7 @@ export function PaymentsTable({ payments, clients, services }: { payments: Payme
                   <td className="py-2 pr-4 text-ink">{clientName(p.client_id)}</td>
                   <td className="py-2 pr-4 text-inkmuted">{getService(p.service_id, services)?.name ?? "—"}</td>
                   <td className="py-2 pr-4 text-inkmuted">{formatDate(p.month)}</td>
-                  <td className="py-2 pr-4 font-medium text-ink">{formatMoney(p.amount)}</td>
+                  <td className="py-2 pr-4 font-medium text-ink">{formatMoney(p.amount, p.currency)}</td>
                   <td className="py-2 pr-4">
                     <Badge
                       label={p.status === "cobrado" ? "Cobrado" : "Pendiente"}

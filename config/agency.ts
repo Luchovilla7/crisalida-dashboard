@@ -38,6 +38,7 @@ export type TeamMember = {
 
 export type ClientStatus = { id: string; label: string; color: string };
 export type Priority = { id: string; label: string; color: string };
+export type CurrencyDef = { id: string; label: string };
 
 // ---------------------------------------------------------------------------
 // Identidad y marca
@@ -48,9 +49,17 @@ export const agency = {
   tagline: "Implementación digital e inteligencia artificial para negocios y marcas",
   logoUrl: "", // ej: "/logo.svg". Vacio = se usa la inicial del nombre.
 
-  // Moneda y formato numerico para todo el modulo de Finanzas y montos de contrato.
+  // Moneda por defecto para clientes/pagos nuevos y formato numerico general.
   currency: "ARS",
   locale: "es-AR",
+
+  // Monedas disponibles para elegir en clientes y pagos. Cada cliente/pago
+  // guarda su propia moneda: los totales de Finanzas se muestran separados
+  // por moneda (no se suma ARS con USD).
+  currencies: [
+    { id: "ARS", label: "Peso argentino (ARS)" },
+    { id: "USD", label: "Dólar estadounidense (USD)" },
+  ] satisfies CurrencyDef[],
 
   // Colores de marca. Se inyectan como variables CSS (ver app/layout.tsx) y se usan
   // en todo el dashboard vía las clases bg-brand-primary / text-brand-accent / etc.,

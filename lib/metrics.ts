@@ -9,9 +9,12 @@ export function isCurrentMonth(dateStr: string) {
 }
 
 export function monthlyRevenue(payments: Payment[]) {
-  return payments
-    .filter((p) => p.status === "cobrado" && isCurrentMonth(p.month))
-    .reduce((sum, p) => sum + Number(p.amount), 0);
+  const totals = new Map<string, number>();
+  for (const p of payments) {
+    if (p.status !== "cobrado" || !isCurrentMonth(p.month)) continue;
+    totals.set(p.currency, (totals.get(p.currency) ?? 0) + Number(p.amount));
+  }
+  return totals;
 }
 
 function today() {

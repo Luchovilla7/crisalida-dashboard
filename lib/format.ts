@@ -10,10 +10,10 @@ export function parseDateOnly(value: string): Date {
   return new Date(y, (m || 1) - 1, d || 1);
 }
 
-export function formatMoney(amount: number) {
+export function formatMoney(amount: number, currency: string = agency.currency) {
   return new Intl.NumberFormat(agency.locale, {
     style: "currency",
-    currency: agency.currency,
+    currency,
     maximumFractionDigits: 0,
   }).format(amount || 0);
 }

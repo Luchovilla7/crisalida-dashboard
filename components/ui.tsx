@@ -117,9 +117,17 @@ export const Select = forwardRef<HTMLSelectElement, SelectHTMLAttributes<HTMLSel
   );
 });
 
-export function Field({ label, children }: { label: string; children: ReactNode }) {
+export function Field({
+  label,
+  children,
+  className,
+}: {
+  label: string;
+  children: ReactNode;
+  className?: string;
+}) {
   return (
-    <div>
+    <div className={className}>
       <label className="mb-1.5 block text-sm font-medium text-ink">{label}</label>
       {children}
     </div>

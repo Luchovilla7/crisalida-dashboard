@@ -16,7 +16,13 @@ export default async function OverviewPage() {
 
   const activeClients = clients.filter((c) => c.status === "activo").length;
   const activeProjects = projects.filter((p) => p.status === "activo").length;
-  const revenue = monthlyRevenue(payments);
+  const revenueByCurrency = monthlyRevenue(payments);
+  const revenue =
+    revenueByCurrency.size > 0
+      ? Array.from(revenueByCurrency.entries())
+          .map(([currency, total]) => formatMoney(total, currency))
+          .join(" · ")
+      : formatMoney(0);
   const pendingTasks = tasks.filter(taskIsPending);
   const overdueTasks = tasks.filter(taskIsOverdue);
   const deadlines = upcomingDeadlines(tasks, projects);
@@ -27,7 +33,7 @@ export default async function OverviewPage() {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
         <KpiCard label="Clientes activos" value={String(activeClients)} icon={<Users size={18} />} />
         <KpiCard label="Proyectos en curso" value={String(activeProjects)} icon={<FolderKanban size={18} />} />
-        <KpiCard label="Ingresos del mes" value={formatMoney(revenue)} icon={<Wallet size={18} />} />
+        <KpiCard label="Ingresos del mes" value={revenue} icon={<Wallet size={18} />} />
         <KpiCard
           label="Tareas pendientes"
           value={String(pendingTasks.length)}

@@ -34,6 +34,7 @@ export function PaymentForm({
     client_id: payment?.client_id ?? "",
     service_id: payment?.service_id ?? "",
     amount: payment?.amount ?? 0,
+    currency: payment?.currency ?? agency.currency,
     month: payment?.month ?? new Date().toISOString().slice(0, 7) + "-01",
     status: payment?.status ?? "pendiente",
     is_retainer: payment?.is_retainer ?? false,
@@ -66,7 +67,13 @@ export function PaymentForm({
     <Modal open={open} onClose={onClose} title={payment ? "Editar pago" : agency.copy.cta.newPayment}>
       <div className="space-y-4">
         <Field label="Cliente">
-          <Select value={form.client_id ?? ""} onChange={(e) => setForm({ ...form, client_id: e.target.value })}>
+          <Select
+            value={form.client_id ?? ""}
+            onChange={(e) => {
+              const client = clients.find((c) => c.id === e.target.value);
+              setForm({ ...form, client_id: e.target.value, currency: client?.currency ?? form.currency });
+            }}
+          >
             <option value="">Sin cliente</option>
             {clients.map((c) => (
               <option key={c.id} value={c.id}>
@@ -87,8 +94,8 @@ export function PaymentForm({
           </Select>
         </Field>
 
-        <div className="grid grid-cols-2 gap-3">
-          <Field label={`Monto (${agency.currency})`}>
+        <div className="grid grid-cols-3 gap-3">
+          <Field label="Monto" className="col-span-2">
             <Input
               type="number"
               min={0}
@@ -96,14 +103,24 @@ export function PaymentForm({
               onChange={(e) => setForm({ ...form, amount: Number(e.target.value) })}
             />
           </Field>
-          <Field label="Mes">
-            <Input
-              type="month"
-              value={toMonthInput(form.month)}
-              onChange={(e) => setForm({ ...form, month: fromMonthInput(e.target.value) })}
-            />
+          <Field label="Moneda">
+            <Select value={form.currency} onChange={(e) => setForm({ ...form, currency: e.target.value })}>
+              {agency.currencies.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.id}
+                </option>
+              ))}
+            </Select>
           </Field>
         </div>
+
+        <Field label="Mes">
+          <Input
+            type="month"
+            value={toMonthInput(form.month)}
+            onChange={(e) => setForm({ ...form, month: fromMonthInput(e.target.value) })}
+          />
+        </Field>
 
         <div className="grid grid-cols-2 gap-3">
           <Field label="Estado">
