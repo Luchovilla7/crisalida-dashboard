@@ -1,5 +1,5 @@
 import "server-only";
-import type { Client, Payment } from "@/lib/types";
+import type { Client, Payment, Service } from "@/lib/types";
 import { agency } from "@/config/agency";
 import { getService } from "@/lib/config-helpers";
 import { monthLabel, parseDateOnly } from "@/lib/format";
@@ -21,7 +21,7 @@ export function monthlySeries(payments: Payment[], months = 6) {
   return buckets.map(({ label, total }) => ({ label, total }));
 }
 
-export function byService(payments: Payment[]) {
+export function byService(payments: Payment[], servicesList?: Service[]) {
   const totals = new Map<string, number>();
   for (const p of payments) {
     if (p.status !== "cobrado") continue;
@@ -29,7 +29,7 @@ export function byService(payments: Payment[]) {
     totals.set(key, (totals.get(key) ?? 0) + Number(p.amount));
   }
   return Array.from(totals.entries())
-    .map(([id, total]) => ({ name: getService(id)?.name ?? "Otro", total }))
+    .map(([id, total]) => ({ name: getService(id, servicesList)?.name ?? "Otro", total }))
     .sort((a, b) => b.total - a.total);
 }
 
@@ -56,8 +56,9 @@ export function pendingVsCollected(payments: Payment[]) {
   return { pending, collected };
 }
 
-export function estimatedMrr(clients: Client[]) {
-  const retainerIds = new Set(agency.services.filter((s) => s.type === "retainer").map((s) => s.id));
+export function estimatedMrr(clients: Client[], servicesList?: Service[]) {
+  const list = servicesList ?? agency.services;
+  const retainerIds = new Set(list.filter((s) => s.type === "retainer").map((s) => s.id));
   return clients
     .filter((c) => c.status === "activo" && c.service_ids.some((id) => retainerIds.has(id)))
     .reduce((sum, c) => sum + Number(c.contract_value), 0);

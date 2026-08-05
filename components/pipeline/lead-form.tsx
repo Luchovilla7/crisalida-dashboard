@@ -5,20 +5,23 @@ import { useRouter } from "next/navigation";
 import { agency } from "@/config/agency";
 import { Button, Field, Input, Modal, Select, Textarea } from "@/components/ui";
 import { createLead, deleteLead, updateLead, type LeadInput } from "@/lib/actions";
-import type { Lead } from "@/lib/types";
+import type { Lead, Service } from "@/lib/types";
 
 export function LeadForm({
   open,
   onClose,
   lead,
   initialStage,
+  services,
 }: {
   open: boolean;
   onClose: () => void;
   lead?: Lead | null;
   initialStage?: string;
+  services?: Service[];
 }) {
   const router = useRouter();
+  const servicesList = services ?? (agency.services as Service[]);
   const [pending, startTransition] = useTransition();
   const [form, setForm] = useState<LeadInput>(() => ({
     name: lead?.name ?? "",
@@ -92,7 +95,7 @@ export function LeadForm({
         <Field label="Servicio de interés">
           <Select value={form.service_id ?? ""} onChange={(e) => setForm({ ...form, service_id: e.target.value })}>
             <option value="">Sin definir</option>
-            {agency.services.map((s) => (
+            {servicesList.map((s) => (
               <option key={s.id} value={s.id}>
                 {s.name}
               </option>

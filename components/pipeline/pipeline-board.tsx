@@ -9,10 +9,10 @@ import { Avatar, Button } from "@/components/ui";
 import { getService, getTeamMember } from "@/lib/config-helpers";
 import { formatMoney } from "@/lib/format";
 import { moveLead } from "@/lib/actions";
-import type { Lead } from "@/lib/types";
+import type { Lead, Service } from "@/lib/types";
 import { LeadForm } from "./lead-form";
 
-export function PipelineBoard({ leads }: { leads: Lead[] }) {
+export function PipelineBoard({ leads, services }: { leads: Lead[]; services?: Service[] }) {
   const router = useRouter();
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState<Lead | null>(null);
@@ -47,7 +47,7 @@ export function PipelineBoard({ leads }: { leads: Lead[] }) {
         }}
         renderCard={(lead) => {
           const responsible = getTeamMember(lead.assigned_to);
-          const service = getService(lead.service_id);
+          const service = getService(lead.service_id, services);
           return (
             <button
               onClick={() => openEdit(lead)}
@@ -82,7 +82,7 @@ export function PipelineBoard({ leads }: { leads: Lead[] }) {
         )}
       />
 
-      <LeadForm key={editing?.id ?? "new"} open={formOpen} onClose={() => setFormOpen(false)} lead={editing} initialStage={initialStage} />
+      <LeadForm key={editing?.id ?? "new"} open={formOpen} onClose={() => setFormOpen(false)} lead={editing} initialStage={initialStage} services={services} />
     </div>
   );
 }

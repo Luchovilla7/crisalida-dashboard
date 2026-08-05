@@ -88,3 +88,13 @@ export type ActivityLog = {
   message: string;
   created_at: string;
 };
+
+export type Service = {
+  id: string;
+  name: string;
+  description: string;
+  price: string;
+  type: "proyecto" | "retainer";
+  created_at?: string;
+  updated_at?: string;
+};

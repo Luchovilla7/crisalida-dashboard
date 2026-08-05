@@ -25,6 +25,7 @@ function revalidateAll() {
   revalidatePath("/pipeline");
   revalidatePath("/proyectos");
   revalidatePath("/finanzas");
+  revalidatePath("/servicios");
   revalidatePath("/equipo");
   revalidatePath("/calendario");
 }
@@ -262,3 +263,41 @@ export async function deletePayment(id: string) {
   if (error) throw new Error(error.message);
   revalidateAll();
 }
+
+// ---------------------------------------------------------------------------
+// Servicios
+// ---------------------------------------------------------------------------
+
+export type ServiceInput = {
+  name: string;
+  description: string;
+  price: string;
+  type: "proyecto" | "retainer";
+};
+
+export async function createService(input: ServiceInput) {
+  const { error } = await supabase().from("services").insert(input);
+  if (error) throw new Error(error.message);
+  await logActivity("servicio_nuevo", `Nuevo servicio en catálogo: ${input.name}`);
+  revalidateAll();
+}
+
+export async function updateService(id: string, input: Partial<ServiceInput>) {
+  const { error } = await supabase()
+    .from("services")
+    .update({ ...input, updated_at: new Date().toISOString() })
+    .eq("id", id);
+  if (error) throw new Error(error.message);
+  if (input.name) {
+    await logActivity("servicio_editado", `Servicio actualizado: ${input.name}`);
+  }
+  revalidateAll();
+}
+
+export async function deleteService(id: string, serviceName?: string) {
+  const { error } = await supabase().from("services").delete().eq("id", id);
+  if (error) throw new Error(error.message);
+  await logActivity("servicio_eliminado", `Servicio eliminado: ${serviceName || id}`);
+  revalidateAll();
+}
+

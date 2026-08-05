@@ -1,7 +1,9 @@
 import { agency } from "@/config/agency";
+import type { Service } from "@/lib/types";
 
-export function getService(id: string | null | undefined) {
-  return agency.services.find((s) => s.id === id) ?? null;
+export function getService(id: string | null | undefined, servicesList?: Service[]) {
+  const list = servicesList ?? agency.services;
+  return list.find((s) => s.id === id) ?? null;
 }
 
 export function getTeamMember(id: string | null | undefined) {

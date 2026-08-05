@@ -101,6 +101,17 @@ create table if not exists activity_log (
   created_at timestamptz not null default now()
 );
 
+-- SERVICIOS ----------------------------------------------------------------
+create table if not exists services (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  description text,
+  price text not null default '',
+  type text not null default 'proyecto',
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
 -- Indices utiles ------------------------------------------------------------
 create index if not exists idx_tasks_stage on tasks(stage_id);
 create index if not exists idx_leads_stage on leads(stage_id);
@@ -125,7 +136,7 @@ do $$
 declare
   t text;
 begin
-  for t in select unnest(array['clients','client_notes','client_links','leads','projects','tasks','payments','activity_log'])
+  for t in select unnest(array['clients','client_notes','client_links','leads','projects','tasks','payments','activity_log','services'])
   loop
     execute format('alter table %I enable row level security;', t);
     execute format('drop policy if exists "allow all anon" on %I;', t);

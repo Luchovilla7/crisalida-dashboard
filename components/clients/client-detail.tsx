@@ -9,17 +9,19 @@ import { Badge, Button, Card, EmptyState, Input, Textarea } from "@/components/u
 import { getClientStatus, getService, getTeamMember } from "@/lib/config-helpers";
 import { formatDate, formatMoney, formatRelative } from "@/lib/format";
 import { addClientLink, addClientNote } from "@/lib/actions";
-import type { Client, ClientLink, ClientNote } from "@/lib/types";
+import type { Client, ClientLink, ClientNote, Service } from "@/lib/types";
 import { ClientForm } from "./client-form";
 
 export function ClientDetail({
   client,
   notes,
   links,
+  services,
 }: {
   client: Client;
   notes: ClientNote[];
   links: ClientLink[];
+  services?: Service[];
 }) {
   const router = useRouter();
   const [editOpen, setEditOpen] = useState(false);
@@ -88,7 +90,7 @@ export function ClientDetail({
             <div className="mt-0.5 flex flex-wrap gap-1">
               {client.service_ids.length === 0 && <span className="text-sm text-inkmuted">—</span>}
               {client.service_ids.map((id) => {
-                const svc = getService(id);
+                const svc = getService(id, services);
                 return svc ? (
                   <span key={id} className="rounded-full bg-line/40 px-2 py-0.5 text-[11px] text-ink">
                     {svc.name}
@@ -161,7 +163,7 @@ export function ClientDetail({
         </Card>
       </div>
 
-      <ClientForm key={client?.id ?? "new"} open={editOpen} onClose={() => setEditOpen(false)} client={client} />
+      <ClientForm key={client?.id ?? "new"} open={editOpen} onClose={() => setEditOpen(false)} client={client} services={services} />
     </div>
   );
 }

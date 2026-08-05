@@ -49,7 +49,7 @@ export const agency = {
   logoUrl: "", // ej: "/logo.svg". Vacio = se usa la inicial del nombre.
 
   // Moneda y formato numerico para todo el modulo de Finanzas y montos de contrato.
-  currency: "USD",
+  currency: "ARS",
   locale: "es-AR",
 
   // Colores de marca. Se inyectan como variables CSS (ver app/layout.tsx) y se usan
@@ -68,50 +68,50 @@ export const agency = {
   },
 
   // ---------------------------------------------------------------------------
-  // Catalogo de servicios. Alimenta los selectores de "servicio contratado" en
-  // Clientes y Pipeline, y el modulo Servicios. Agrega/quita filas libremente.
+  // Catalogo de servicios por defecto. Si la base de datos no tiene servicios,
+  // se usan estos como fallback inicial.
   // ---------------------------------------------------------------------------
   services: [
     {
       id: "automatizaciones",
       name: "Automatizaciones",
       description: "Flujos automatizados entre herramientas para eliminar tareas manuales.",
-      price: "Desde USD 400",
+      price: "Desde $ 400.000",
       type: "proyecto",
     },
     {
       id: "chatbots-ia",
       name: "Chatbots / Agentes IA",
       description: "Agentes conversacionales con IA para ventas, soporte o atención al cliente.",
-      price: "Desde USD 600",
+      price: "Desde $ 600.000",
       type: "proyecto",
     },
     {
       id: "presencia-digital",
       name: "Presencia digital",
       description: "Sitio web, landing pages y activos digitales de marca.",
-      price: "Desde USD 350",
+      price: "Desde $ 350.000",
       type: "proyecto",
     },
     {
       id: "sistemas-internos",
       name: "Sistemas internos",
       description: "Paneles y herramientas a medida para operar el negocio del cliente.",
-      price: "Desde USD 900",
+      price: "Desde $ 900.000",
       type: "proyecto",
     },
     {
       id: "integraciones",
       name: "Integraciones",
       description: "Conexión de APIs y plataformas (CRM, pagos, mensajería, etc.).",
-      price: "Desde USD 300",
+      price: "Desde $ 300.000",
       type: "proyecto",
     },
     {
       id: "retainer-mensual",
       name: "Retainer mensual",
       description: "Soporte, mantenimiento y mejoras continuas mes a mes.",
-      price: "USD 450 / mes",
+      price: "$ 450.000 / mes",
       type: "retainer",
     },
   ] satisfies Service[],

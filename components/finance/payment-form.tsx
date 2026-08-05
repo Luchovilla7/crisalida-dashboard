@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { agency } from "@/config/agency";
 import { Button, Field, Input, Modal, Select } from "@/components/ui";
 import { createPayment, deletePayment, updatePayment, type PaymentInput } from "@/lib/actions";
-import type { Client, Payment } from "@/lib/types";
+import type { Client, Payment, Service } from "@/lib/types";
 
 function toMonthInput(dateStr: string) {
   return dateStr ? dateStr.slice(0, 7) : "";
@@ -19,13 +19,16 @@ export function PaymentForm({
   onClose,
   payment,
   clients,
+  services,
 }: {
   open: boolean;
   onClose: () => void;
   payment?: Payment | null;
   clients: Client[];
+  services?: Service[];
 }) {
   const router = useRouter();
+  const servicesList = services ?? (agency.services as Service[]);
   const [pending, startTransition] = useTransition();
   const [form, setForm] = useState<PaymentInput>(() => ({
     client_id: payment?.client_id ?? "",
@@ -76,7 +79,7 @@ export function PaymentForm({
         <Field label="Servicio">
           <Select value={form.service_id ?? ""} onChange={(e) => setForm({ ...form, service_id: e.target.value })}>
             <option value="">Sin definir</option>
-            {agency.services.map((s) => (
+            {servicesList.map((s) => (
               <option key={s.id} value={s.id}>
                 {s.name}
               </option>

@@ -9,10 +9,10 @@ import { Badge, Button, EmptyState } from "@/components/ui";
 import { getClientStatus, getService, getTeamMember } from "@/lib/config-helpers";
 import { formatDate, formatMoney } from "@/lib/format";
 import { deleteClient } from "@/lib/actions";
-import type { Client } from "@/lib/types";
+import type { Client, Service } from "@/lib/types";
 import { ClientForm } from "./client-form";
 
-export function ClientList({ clients }: { clients: Client[] }) {
+export function ClientList({ clients, services }: { clients: Client[]; services?: Service[] }) {
   const router = useRouter();
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState<Client | null>(null);
@@ -77,7 +77,7 @@ export function ClientList({ clients }: { clients: Client[] }) {
                 {client.service_ids.length > 0 && (
                   <div className="flex flex-wrap gap-1">
                     {client.service_ids.map((id) => {
-                      const svc = getService(id);
+                      const svc = getService(id, services);
                       return svc ? (
                         <span key={id} className="rounded-full bg-line/40 px-2 py-0.5 text-[11px] text-ink">
                           {svc.name}
@@ -115,7 +115,7 @@ export function ClientList({ clients }: { clients: Client[] }) {
         </div>
       )}
 
-      <ClientForm key={editing?.id ?? "new"} open={formOpen} onClose={() => setFormOpen(false)} client={editing} />
+      <ClientForm key={editing?.id ?? "new"} open={formOpen} onClose={() => setFormOpen(false)} client={editing} services={services} />
     </div>
   );
 }

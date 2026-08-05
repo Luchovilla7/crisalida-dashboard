@@ -6,10 +6,10 @@ import { agency } from "@/config/agency";
 import { Badge, Button, Card, EmptyState } from "@/components/ui";
 import { getService } from "@/lib/config-helpers";
 import { formatDate, formatMoney } from "@/lib/format";
-import type { Client, Payment } from "@/lib/types";
+import type { Client, Payment, Service } from "@/lib/types";
 import { PaymentForm } from "./payment-form";
 
-export function PaymentsTable({ payments, clients }: { payments: Payment[]; clients: Client[] }) {
+export function PaymentsTable({ payments, clients, services }: { payments: Payment[]; clients: Client[]; services?: Service[] }) {
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Payment | null>(null);
 
@@ -51,7 +51,7 @@ export function PaymentsTable({ payments, clients }: { payments: Payment[]; clie
               {payments.map((p) => (
                 <tr key={p.id} className="border-b border-line/60 last:border-0">
                   <td className="py-2 pr-4 text-ink">{clientName(p.client_id)}</td>
-                  <td className="py-2 pr-4 text-inkmuted">{getService(p.service_id)?.name ?? "—"}</td>
+                  <td className="py-2 pr-4 text-inkmuted">{getService(p.service_id, services)?.name ?? "—"}</td>
                   <td className="py-2 pr-4 text-inkmuted">{formatDate(p.month)}</td>
                   <td className="py-2 pr-4 font-medium text-ink">{formatMoney(p.amount)}</td>
                   <td className="py-2 pr-4">
@@ -78,7 +78,7 @@ export function PaymentsTable({ payments, clients }: { payments: Payment[]; clie
         </div>
       )}
 
-      <PaymentForm key={editing?.id ?? "new"} open={open} onClose={() => setOpen(false)} payment={editing} clients={clients} />
+      <PaymentForm key={editing?.id ?? "new"} open={open} onClose={() => setOpen(false)} payment={editing} clients={clients} services={services} />
     </Card>
   );
 }

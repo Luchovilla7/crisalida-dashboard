@@ -1,5 +1,5 @@
 import { Repeat, TrendingDown, TrendingUp } from "lucide-react";
-import { getClients, getPayments } from "@/lib/queries";
+import { getClients, getPayments, getServices } from "@/lib/queries";
 import { byClient, byService, estimatedMrr, monthlySeries, pendingVsCollected } from "@/lib/finance";
 import { formatMoney } from "@/lib/format";
 import { KpiCard } from "@/components/ui";
@@ -7,13 +7,13 @@ import { MonthlyRevenueChart, BreakdownChart } from "@/components/finance/financ
 import { PaymentsTable } from "@/components/finance/payments-table";
 
 export default async function FinanzasPage() {
-  const [payments, clients] = await Promise.all([getPayments(), getClients()]);
+  const [payments, clients, servicesList] = await Promise.all([getPayments(), getClients(), getServices()]);
 
   const monthly = monthlySeries(payments);
-  const services = byService(payments);
+  const services = byService(payments, servicesList);
   const perClient = byClient(payments, clients);
   const { pending, collected } = pendingVsCollected(payments);
-  const mrr = estimatedMrr(clients);
+  const mrr = estimatedMrr(clients, servicesList);
 
   return (
     <div className="space-y-6">
@@ -31,7 +31,7 @@ export default async function FinanzasPage() {
         <BreakdownChart title="Ingresos por cliente" data={perClient} />
       </div>
 
-      <PaymentsTable payments={payments} clients={clients} />
+      <PaymentsTable payments={payments} clients={clients} services={servicesList} />
     </div>
   );
 }

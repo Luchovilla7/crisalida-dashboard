@@ -5,18 +5,21 @@ import { useRouter } from "next/navigation";
 import { agency } from "@/config/agency";
 import { Button, Field, Input, Modal, Select, Textarea } from "@/components/ui";
 import { createClient, updateClient, type ClientInput } from "@/lib/actions";
-import type { Client } from "@/lib/types";
+import type { Client, Service } from "@/lib/types";
 
 export function ClientForm({
   open,
   onClose,
   client,
+  services,
 }: {
   open: boolean;
   onClose: () => void;
   client?: Client | null;
+  services?: Service[];
 }) {
   const router = useRouter();
+  const servicesList = services ?? (agency.services as Service[]);
   const [pending, startTransition] = useTransition();
   const [form, setForm] = useState<ClientInput>(() => ({
     name: client?.name ?? "",
@@ -86,7 +89,7 @@ export function ClientForm({
 
         <Field label="Servicio(s) contratado(s)">
           <div className="flex flex-wrap gap-2">
-            {agency.services.map((s) => (
+            {servicesList.map((s) => (
               <button
                 type="button"
                 key={s.id}

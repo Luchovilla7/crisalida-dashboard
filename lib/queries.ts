@@ -1,6 +1,7 @@
 import "server-only";
 import { supabase } from "@/lib/supabase";
-import type { Client, ClientLink, ClientNote, Lead, Payment, Project, Task, ActivityLog } from "@/lib/types";
+import { agency } from "@/config/agency";
+import type { Client, ClientLink, ClientNote, Lead, Payment, Project, Task, ActivityLog, Service } from "@/lib/types";
 
 async function run<T>(promise: PromiseLike<{ data: T | null; error: { message: string } | null }>, fallback: T): Promise<T> {
   const { data, error } = await promise;
@@ -52,3 +53,13 @@ export async function getPayments(): Promise<Payment[]> {
 export async function getActivity(limit = 15): Promise<ActivityLog[]> {
   return run(supabase().from("activity_log").select("*").order("created_at", { ascending: false }).limit(limit), []);
 }
+
+export async function getServices(): Promise<Service[]> {
+  const dbServices = await run<Service[]>(
+    supabase().from("services").select("*").order("created_at", { ascending: true }),
+    []
+  );
+  if (dbServices.length > 0) return dbServices;
+  return agency.services as Service[];
+}
+
