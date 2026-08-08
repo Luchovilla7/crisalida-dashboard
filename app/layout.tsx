@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Montserrat } from "next/font/google";
+import Image from "next/image";
 import { agency } from "@/config/agency";
 import "./globals.css";
 
@@ -9,6 +10,9 @@ const sans = Montserrat({ subsets: ["latin"], variable: "--font-sans", display: 
 export const metadata: Metadata = {
   title: `${agency.name} · Dashboard`,
   description: agency.tagline,
+  icons: {
+    icon: "/images/logo.png",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -22,7 +26,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
       </head>
-      <body className="bg-paper text-ink antialiased">{children}</body>
+      <body className="bg-paper text-ink antialiased">
+        {children}
+        <Image
+          src="/images/logo-web-header.png"
+          alt={agency.name}
+          width={72}
+          height={72}
+          className="fixed bottom-4 right-4 z-50 h-16 w-16 object-contain drop-shadow-md sm:h-[4.5rem] sm:w-[4.5rem]"
+        />
+      </body>
     </html>
   );
 }

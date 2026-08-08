@@ -196,7 +196,6 @@ export const agency = {
     nav: {
       overview: "Panel general",
       clients: "Clientes",
-      pipeline: "Pipeline",
       projects: "Proyectos",
       services: "Servicios",
       finance: "Finanzas",

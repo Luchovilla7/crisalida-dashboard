@@ -1,12 +1,12 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   Users,
-  KanbanSquare,
   FolderKanban,
   Package,
   Wallet,
@@ -22,7 +22,6 @@ import { cn } from "@/lib/utils";
 const nav = [
   { href: "/", label: agency.copy.nav.overview, icon: LayoutDashboard },
   { href: "/clientes", label: agency.copy.nav.clients, icon: Users },
-  { href: "/pipeline", label: agency.copy.nav.pipeline, icon: KanbanSquare },
   { href: "/proyectos", label: agency.copy.nav.projects, icon: FolderKanban },
   { href: "/servicios", label: agency.copy.nav.services, icon: Package },
   { href: "/finanzas", label: agency.copy.nav.finance, icon: Wallet },
@@ -35,9 +34,13 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   return (
     <div className="flex h-full flex-col">
       <div className="flex items-center gap-2.5 px-5 py-5">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-primary text-sm font-semibold text-white">
-          {agency.name.charAt(0)}
-        </div>
+        <Image
+          src="/images/logo.png"
+          alt={agency.name}
+          width={32}
+          height={32}
+          className="h-8 w-8 rounded-lg object-contain"
+        />
         <div className="min-w-0">
           <p className="truncate font-display text-sm font-semibold text-ink">{agency.name}</p>
           <p className="truncate text-xs text-inkmuted">{agency.tagline}</p>

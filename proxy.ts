@@ -4,7 +4,12 @@ import { SESSION_COOKIE, verifySessionCookie } from "@/lib/auth";
 export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  if (pathname === "/login" || pathname.startsWith("/_next") || pathname === "/favicon.ico") {
+  if (
+    pathname === "/login" ||
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/images") ||
+    pathname === "/favicon.ico"
+  ) {
     return NextResponse.next();
   }
 
