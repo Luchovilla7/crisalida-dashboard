@@ -274,6 +274,7 @@ export type ServiceInput = {
   name: string;
   description: string;
   price: string;
+  currency: string;
   type: "proyecto" | "retainer";
 };
 

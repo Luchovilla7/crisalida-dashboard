@@ -96,6 +96,7 @@ export type Service = {
   name: string;
   description: string;
   price: string;
+  currency: string;
   type: "proyecto" | "retainer";
   created_at?: string;
   updated_at?: string;

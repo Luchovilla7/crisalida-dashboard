@@ -65,7 +65,10 @@ export function ServicesManager({
               <p className="text-sm text-inkmuted">{service.description || "Sin descripción"}</p>
 
               <div className="mt-auto flex items-center justify-between border-t border-line pt-3">
-                <span className="text-sm font-medium text-ink">{service.price || "Sin precio"}</span>
+                <span className="text-sm font-medium text-ink">
+                  {service.price || "Sin precio"}
+                  {service.price ? <span className="ml-1 text-xs font-normal text-inkmuted">{service.currency}</span> : null}
+                </span>
                 <span className="text-xs text-inkmuted">{activeClients} cliente(s) activo(s)</span>
               </div>
 

@@ -22,6 +22,7 @@ export function ServiceForm({
     name: service?.name ?? "",
     description: service?.description ?? "",
     price: service?.price ?? "",
+    currency: service?.currency ?? agency.currency,
     type: service?.type ?? "proyecto",
   }));
 
@@ -50,23 +51,33 @@ export function ServiceForm({
           />
         </Field>
 
-        <div className="grid grid-cols-2 gap-3">
-          <Field label="Tipo de servicio">
-            <Select
-              value={form.type}
-              onChange={(e) => setForm({ ...form, type: e.target.value as "proyecto" | "retainer" })}
-            >
-              <option value="proyecto">Proyecto único</option>
-              <option value="retainer">Retainer mensual</option>
-            </Select>
-          </Field>
+        <Field label="Tipo de servicio">
+          <Select
+            value={form.type}
+            onChange={(e) => setForm({ ...form, type: e.target.value as "proyecto" | "retainer" })}
+          >
+            <option value="proyecto">Proyecto único</option>
+            <option value="retainer">Retainer mensual</option>
+          </Select>
+        </Field>
 
-          <Field label="Precio o tarifa">
+        <div className="grid grid-cols-3 gap-3">
+          <Field label="Precio o tarifa" className="col-span-2">
             <Input
               value={form.price}
               onChange={(e) => setForm({ ...form, price: e.target.value })}
-              placeholder="Ej: Desde $ 400.000 o $ 450.000 / mes"
+              placeholder="Ej: Desde 400.000 o 450.000 / mes"
             />
+          </Field>
+
+          <Field label="Moneda">
+            <Select value={form.currency} onChange={(e) => setForm({ ...form, currency: e.target.value })}>
+              {agency.currencies.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.id}
+                </option>
+              ))}
+            </Select>
           </Field>
         </div>
 

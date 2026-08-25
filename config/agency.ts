@@ -24,6 +24,7 @@ export type Service = {
   name: string;
   description: string;
   price: string; // texto libre: "USD 500", "Desde USD 1.200", etc.
+  currency: string;
   type: ServiceType;
 };
 
@@ -86,6 +87,7 @@ export const agency = {
       name: "Automatizaciones",
       description: "Flujos automatizados entre herramientas para eliminar tareas manuales.",
       price: "Desde $ 400.000",
+      currency: "ARS",
       type: "proyecto",
     },
     {
@@ -93,6 +95,7 @@ export const agency = {
       name: "Chatbots / Agentes IA",
       description: "Agentes conversacionales con IA para ventas, soporte o atención al cliente.",
       price: "Desde $ 600.000",
+      currency: "ARS",
       type: "proyecto",
     },
     {
@@ -100,6 +103,7 @@ export const agency = {
       name: "Presencia digital",
       description: "Sitio web, landing pages y activos digitales de marca.",
       price: "Desde $ 350.000",
+      currency: "ARS",
       type: "proyecto",
     },
     {
@@ -107,6 +111,7 @@ export const agency = {
       name: "Sistemas internos",
       description: "Paneles y herramientas a medida para operar el negocio del cliente.",
       price: "Desde $ 900.000",
+      currency: "ARS",
       type: "proyecto",
     },
     {
@@ -114,6 +119,7 @@ export const agency = {
       name: "Integraciones",
       description: "Conexión de APIs y plataformas (CRM, pagos, mensajería, etc.).",
       price: "Desde $ 300.000",
+      currency: "ARS",
       type: "proyecto",
     },
     {
@@ -121,6 +127,7 @@ export const agency = {
       name: "Retainer mensual",
       description: "Soporte, mantenimiento y mejoras continuas mes a mes.",
       price: "$ 450.000 / mes",
+      currency: "ARS",
       type: "retainer",
     },
   ] satisfies Service[],

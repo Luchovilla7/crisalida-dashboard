@@ -109,6 +109,7 @@ create table if not exists services (
   name text not null,
   description text,
   price text not null default '',
+  currency text not null default 'ARS',
   type text not null default 'proyecto',
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
