@@ -87,7 +87,18 @@ export function TaskForm({
 
         <div className="grid grid-cols-2 gap-3">
           <Field label="Proyecto">
-            <Select value={form.project_id ?? ""} onChange={(e) => setForm({ ...form, project_id: e.target.value })}>
+            <Select
+              value={form.project_id ?? ""}
+              onChange={(e) => {
+                const projectId = e.target.value;
+                const project = projects.find((p) => p.id === projectId);
+                setForm({
+                  ...form,
+                  project_id: projectId,
+                  client_id: project ? project.client_id ?? "" : form.client_id,
+                });
+              }}
+            >
               <option value="">Sin proyecto</option>
               {projects.map((p) => (
                 <option key={p.id} value={p.id}>
@@ -97,7 +108,11 @@ export function TaskForm({
             </Select>
           </Field>
           <Field label="Cliente">
-            <Select value={form.client_id ?? ""} onChange={(e) => setForm({ ...form, client_id: e.target.value })}>
+            <Select
+              value={form.client_id ?? ""}
+              disabled={Boolean(form.project_id)}
+              onChange={(e) => setForm({ ...form, client_id: e.target.value })}
+            >
               <option value="">Sin cliente</option>
               {clients.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -105,6 +120,9 @@ export function TaskForm({
                 </option>
               ))}
             </Select>
+            {form.project_id ? (
+              <p className="mt-1 text-xs text-inkmuted">Se toma del cliente asignado al proyecto.</p>
+            ) : null}
           </Field>
         </div>
 
