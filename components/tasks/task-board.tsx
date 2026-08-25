@@ -60,7 +60,8 @@ export function TaskBoard({ tasks, projects, clients }: { tasks: Task[]; project
           const checklist = task.checklist ?? [];
           const done = checklist.filter((i) => i.done).length;
           const overdue = taskIsOverdue(task);
-          const ref = projectName(task.project_id) ?? clientName(task.client_id);
+          const project = projectName(task.project_id);
+          const client = clientName(task.client_id);
           return (
             <button
               onClick={() => openEdit(task)}
@@ -70,7 +71,8 @@ export function TaskBoard({ tasks, projects, clients }: { tasks: Task[]; project
                 <p className="text-sm font-medium text-ink">{task.title}</p>
                 <Badge label={priority.label} color={priority.color} />
               </div>
-              {ref && <p className="mt-1 text-xs text-inkmuted">{ref}</p>}
+              {project && <p className="mt-1 text-xs text-inkmuted">{project}</p>}
+              {client && <p className="text-[11px] text-inkmuted/80">{client}</p>}
               {checklist.length > 0 && (
                 <p className="mt-2 text-[11px] text-inkmuted">
                   {done}/{checklist.length} completados
