@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { agency } from "@/config/agency";
 import { cn } from "@/lib/utils";
+import { GlobalSearch, type SearchClient, type SearchProject, type SearchTask } from "@/components/global-search";
 
 const nav = [
   { href: "/", label: agency.copy.nav.overview, icon: LayoutDashboard },
@@ -29,8 +30,27 @@ const nav = [
   { href: "/calendario", label: agency.copy.nav.calendar, icon: CalendarDays },
 ];
 
-function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
+function SidebarContent({
+  onNavigate,
+  overdueTasks,
+  pendingPayments,
+}: {
+  onNavigate?: () => void;
+  overdueTasks: number;
+  pendingPayments: number;
+}) {
   const pathname = usePathname();
+  const badges: Record<string, { count: number; title: string }> = {
+    "/proyectos": {
+      count: overdueTasks,
+      title: `${overdueTasks} tarea${overdueTasks === 1 ? "" : "s"} vencida${overdueTasks === 1 ? "" : "s"}`,
+    },
+    "/finanzas": {
+      count: pendingPayments,
+      title: `${pendingPayments} pago${pendingPayments === 1 ? "" : "s"} pendiente${pendingPayments === 1 ? "" : "s"}`,
+    },
+  };
+
   return (
     <div className="flex h-full flex-col">
       <div className="flex items-center gap-2.5 px-5 py-5">
@@ -51,18 +71,25 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
         {nav.map((item) => {
           const active = pathname === item.href;
           const Icon = item.icon;
+          const badge = badges[item.href];
           return (
             <Link
               key={item.href}
               href={item.href}
               onClick={onNavigate}
+              title={badge && badge.count > 0 ? badge.title : undefined}
               className={cn(
                 "flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition",
                 active ? "bg-brand-primary/10 text-brand-primary" : "text-ink hover:bg-ink/5"
               )}
             >
               <Icon size={17} />
-              {item.label}
+              <span className="flex-1">{item.label}</span>
+              {badge && badge.count > 0 && (
+                <span className="rounded-full bg-red-500 px-1.5 py-0.5 text-[10px] font-semibold leading-none text-white">
+                  {badge.count}
+                </span>
+              )}
             </Link>
           );
         })}
@@ -81,7 +108,21 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   );
 }
 
-export function Shell({ children }: { children: ReactNode }) {
+export function Shell({
+  children,
+  overdueTasks = 0,
+  pendingPayments = 0,
+  searchClients = [],
+  searchProjects = [],
+  searchTasks = [],
+}: {
+  children: ReactNode;
+  overdueTasks?: number;
+  pendingPayments?: number;
+  searchClients?: SearchClient[];
+  searchProjects?: SearchProject[];
+  searchTasks?: SearchTask[];
+}) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
   const current = nav.find((item) => item.href === pathname);
@@ -90,7 +131,7 @@ export function Shell({ children }: { children: ReactNode }) {
     <div className="flex min-h-screen">
       <aside className="hidden w-64 shrink-0 border-r border-line md:block">
         <div className="fixed h-screen w-64">
-          <SidebarContent />
+          <SidebarContent overdueTasks={overdueTasks} pendingPayments={pendingPayments} />
         </div>
       </aside>
 
@@ -104,24 +145,29 @@ export function Shell({ children }: { children: ReactNode }) {
             >
               <X size={18} />
             </button>
-            <SidebarContent onNavigate={() => setMobileOpen(false)} />
+            <SidebarContent
+              onNavigate={() => setMobileOpen(false)}
+              overdueTasks={overdueTasks}
+              pendingPayments={pendingPayments}
+            />
           </div>
         </div>
       )}
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-30 flex items-center justify-between border-b border-line bg-surface/80 px-4 py-3.5 backdrop-blur sm:px-6">
-          <div className="flex items-center gap-3">
+        <header className="sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-line bg-surface/80 px-4 py-3.5 backdrop-blur sm:px-6">
+          <div className="flex min-w-0 items-center gap-3">
             <button
               onClick={() => setMobileOpen(true)}
               className="rounded-lg p-1.5 text-inkmuted hover:bg-ink/5 md:hidden"
             >
               <Menu size={19} />
             </button>
-            <h1 className="font-display text-base font-semibold text-inkstrong">
+            <h1 className="truncate font-display text-base font-semibold text-inkstrong">
               {current?.label ?? agency.name}
             </h1>
           </div>
+          <GlobalSearch clients={searchClients} projects={searchProjects} tasks={searchTasks} />
         </header>
 
         <main className="flex-1 p-4 sm:p-6">{children}</main>
