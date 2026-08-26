@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Plus } from "lucide-react";
 import { agency } from "@/config/agency";
 import { KanbanBoard } from "@/components/kanban-board";
@@ -15,9 +15,22 @@ import { TaskForm } from "./task-form";
 
 export function TaskBoard({ tasks, projects, clients }: { tasks: Task[]; projects: Project[]; clients: Client[] }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState<Task | null>(null);
   const [initialStage, setInitialStage] = useState<string | undefined>();
+
+  useEffect(() => {
+    const taskId = searchParams.get("task");
+    if (!taskId) return;
+    const task = tasks.find((t) => t.id === taskId);
+    if (task) {
+      setEditing(task);
+      setFormOpen(true);
+    }
+    router.replace("/proyectos", { scroll: false });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
   function openNew(stageId: string) {
     setEditing(null);

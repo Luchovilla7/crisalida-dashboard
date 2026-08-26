@@ -105,7 +105,7 @@ export function GlobalSearch({
               {results.projects.map((p) => (
                 <button
                   key={p.id}
-                  onClick={() => go("/proyectos")}
+                  onClick={() => go(`/proyectos?project=${p.id}`)}
                   className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm text-ink hover:bg-ink/5"
                 >
                   <FolderKanban size={14} className="shrink-0 text-inkmuted" />
@@ -121,7 +121,7 @@ export function GlobalSearch({
               {results.tasks.map((t) => (
                 <button
                   key={t.id}
-                  onClick={() => go("/proyectos")}
+                  onClick={() => go(`/proyectos?task=${t.id}`)}
                   className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm text-ink hover:bg-ink/5"
                 >
                   <CheckSquare size={14} className="shrink-0 text-inkmuted" />

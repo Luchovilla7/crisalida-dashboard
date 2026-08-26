@@ -1,18 +1,45 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Pencil, Plus } from "lucide-react";
 import { agency } from "@/config/agency";
 import { Button, Card, EmptyState } from "@/components/ui";
 import { formatDate } from "@/lib/format";
+import { cn } from "@/lib/utils";
 import type { Client, Project } from "@/lib/types";
 import { ProjectForm } from "./project-form";
 
 const STATUS_LABEL: Record<string, string> = { activo: "Activo", "en-pausa": "En pausa", finalizado: "Finalizado" };
 
 export function ProjectList({ projects, clients }: { projects: Project[]; clients: Client[] }) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Project | null>(null);
+  const [highlighted, setHighlighted] = useState<string | null>(null);
+  const rowRefs = useRef<Record<string, HTMLTableRowElement | null>>({});
+  const highlightTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    const projectId = searchParams.get("project");
+    if (!projectId) return;
+    rowRefs.current[projectId]?.scrollIntoView({ behavior: "smooth", block: "center" });
+    setHighlighted(projectId);
+    router.replace("/proyectos", { scroll: false });
+    if (highlightTimer.current) clearTimeout(highlightTimer.current);
+    highlightTimer.current = setTimeout(() => setHighlighted(null), 2500);
+    // Deliberately no cleanup here: router.replace() below changes searchParams,
+    // re-running this effect with projectId now null. A cleanup tied to that
+    // re-run would cancel the fade timer before it ever fires.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
+
+  useEffect(() => {
+    return () => {
+      if (highlightTimer.current) clearTimeout(highlightTimer.current);
+    };
+  }, []);
 
   function clientName(id: string | null) {
     return clients.find((c) => c.id === id)?.name ?? "Sin cliente";
@@ -49,7 +76,16 @@ export function ProjectList({ projects, clients }: { projects: Project[]; client
             </thead>
             <tbody>
               {projects.map((p) => (
-                <tr key={p.id} className="border-b border-line/60 last:border-0">
+                <tr
+                  key={p.id}
+                  ref={(el) => {
+                    rowRefs.current[p.id] = el;
+                  }}
+                  className={cn(
+                    "border-b border-line/60 last:border-0 transition-colors",
+                    highlighted === p.id && "bg-brand-primary/10"
+                  )}
+                >
                   <td className="py-2 pr-4 font-medium text-ink">{p.name}</td>
                   <td className="py-2 pr-4 text-inkmuted">{clientName(p.client_id)}</td>
                   <td className="py-2 pr-4 text-inkmuted">{STATUS_LABEL[p.status] ?? p.status}</td>
